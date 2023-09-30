@@ -1,7 +1,7 @@
 package main
 
 import (
-	"net/http"
+	"auth-jwt/controllers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,10 +9,9 @@ import (
 func main() {
 	router := gin.Default()
 
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"data": "this is the register endpoint.",
-		})
-	})
+	public := router.Group("/api")
+
+	public.POST("/register", controllers.RegisterUser)
+
 	router.Run(":8080")
 }
