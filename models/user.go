@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/jinzhu/gorm"
@@ -14,13 +15,17 @@ type User struct {
 }
 
 func (u User) Save() (User, error) {
-	err := DB.Create(&u).Error
+	//fmt.Println(u)
+	fmt.Println(DB, "ほげ")
+	err := DB.Create(&u) //ここでエラーが出てる
+	//fmt.Println(u)
 	if err != nil {
-		return User{}, err
+		return User{}, err.Error
 	}
 	return u, nil
 }
 
+// 自動的に呼び出される
 func (u *User) BeforeSave() error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {

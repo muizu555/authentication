@@ -28,7 +28,7 @@ func ConnectDataBase() {
 
 	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", dbUser, dbPass, dbHost, dbPort, dbName)
 
-	DB, err := gorm.Open(driver, dbURI)
+	DB, err = gorm.Open(driver, dbURI)
 
 	if err != nil {
 		log.Fatal("Could not connect to the database", err)
