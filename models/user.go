@@ -95,17 +95,17 @@ func parseToken(tokenString string) (*jwt.Token, error) {
 	return token, nil
 }
 
-// func TokenValid(c *gin.Context) error {
-// 	tokenString := extractTokenString(c)
+func TokenValid(c *gin.Context) error {
+	tokenString := extractTokenString(c)
 
-// 	token, err := parseToken(tokenString)
+	_, err := parseToken(tokenString)
 
-// 	if err != nil {
-// 		return err
-// 	}
+	if err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	return nil
+}
 
 func ExtractTokenId(c *gin.Context) (uint, error) {
 	tokenString := extractTokenString(c)

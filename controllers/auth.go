@@ -62,3 +62,25 @@ func LoginUser(c *gin.Context) {
 		"token": token,
 	})
 }
+
+func CurrentUser(c *gin.Context) {
+	userId, err := models.ExtractTokenId(c)
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	var user models.User
+
+	err = models.DB.First(&user, userId).Error
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": user.PrepareOutput(),
+	})
+}
