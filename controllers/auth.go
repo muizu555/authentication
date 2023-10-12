@@ -24,7 +24,8 @@ func RegisterUser(c *gin.Context) {
 	user := models.User{Username: input.Username, Password: input.Password}
 	//fmt.Println(user)
 
-	user, err := user.Save()
+	newUser, err := user.Save()
+	//fmt.Println(newUser)
 	if err != nil {
 		log.Println("Error saving user: ", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -32,6 +33,32 @@ func RegisterUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": user.PrepareOutput(),
+		"data": newUser.PrepareOutput(),
+	})
+}
+
+type LoginInput struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+func LoginUser(c *gin.Context) {
+	var input LoginInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	token, err := models.GenerateToken(input.Username, input.Password)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"token": token,
 	})
 }

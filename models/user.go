@@ -1,6 +1,7 @@
 package models
 
 import (
+	"auth-jwt/utils/token"
 	"fmt"
 	"strings"
 
@@ -15,12 +16,9 @@ type User struct {
 }
 
 func (u User) Save() (User, error) {
-	//fmt.Println(u)
-	fmt.Println(DB, "ほげ")
-	err := DB.Create(&u) //ここでエラーが出てる
-	//fmt.Println(u)
+	err := DB.Create(&u).Error
 	if err != nil {
-		return User{}, err.Error
+		return User{}, err
 	}
 	return u, nil
 }
@@ -40,6 +38,31 @@ func (u *User) BeforeSave() error {
 }
 
 func (u User) PrepareOutput() User {
+	fmt.Println(u)
 	u.Password = ""
 	return u
+}
+
+func GenerateToken(username string, password string) (string, error) {
+	var user User
+
+	err := DB.Where("username = ?", username).First(&user).Error
+
+	if err != nil {
+		return "", err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+
+	if err != nil {
+		return "", err
+	}
+
+	token, err := token.GenerateToken(user.ID)
+
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
