@@ -3,8 +3,11 @@ package models
 import (
 	"auth-jwt/utils/token"
 	"fmt"
+	"os"
 	"strings"
 
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -65,4 +68,65 @@ func GenerateToken(username string, password string) (string, error) {
 	}
 
 	return token, nil
+}
+
+func extractTokenString(c *gin.Context) string {
+	bearToken := c.Request.Header.Get("Authorization")
+	strArr := strings.Split(bearToken, " ")
+	if len(strArr) == 2 {
+		return strArr[1]
+	}
+
+	return ""
+}
+
+func parseToken(tokenString string) (*jwt.Token, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("There was an error")
+		}
+		return []byte(os.Getenv("API_SECRET")), nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return token, nil
+}
+
+// func TokenValid(c *gin.Context) error {
+// 	tokenString := extractTokenString(c)
+
+// 	token, err := parseToken(tokenString)
+
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	return nil
+// }
+
+func ExtractTokenId(c *gin.Context) (uint, error) {
+	tokenString := extractTokenString(c)
+
+	token, err := parseToken(tokenString)
+
+	if err != nil {
+		return 0, err
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+
+	if ok && token.Valid {
+		userId, ok := claims["user_id"].(float64)
+
+		if !ok {
+			return 0, nil
+		}
+
+		return uint(userId), nil
+	}
+
+	return 0, nil
 }
