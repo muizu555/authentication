@@ -34,5 +34,6 @@ func ConnectDataBase() {
 		log.Fatal("Could not connect to the database", err)
 	}
 
-	DB.AutoMigrate(&User{})
+	DB.AutoMigrate(&User{}, &Task{})
+
 }
