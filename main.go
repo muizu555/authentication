@@ -15,12 +15,19 @@ func main() {
 
 	public := router.Group("/api")
 
-	public.POST("/register", controllers.RegisterUser)
-	public.POST("/login", controllers.LoginUser)
+	{
+		public.POST("/register", controllers.RegisterUser)
+		public.POST("/login", controllers.LoginUser)
+	}
 
 	protected := router.Group("/api/admin")
 	protected.Use(middlewares.JwtAuthMiddleware())
-	protected.GET("/user", controllers.CurrentUser)
+
+	{
+		protected.GET("/users", controllers.CurrentUser)
+		protected.POST("/tasks", controllers.CreateTask)
+
+	}
 
 	router.Run(":8080")
 }
