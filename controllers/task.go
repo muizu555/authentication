@@ -10,7 +10,7 @@ import (
 
 type TaskInput struct {
 	Desc   string `json:"desc" binding:"required"`
-	UserId string `json:"userId" binding:"required"`
+	UserId int    `json:"userId" binding:"required"`
 }
 
 func CreateTask(c *gin.Context) {
