@@ -26,6 +26,7 @@ func main() {
 	{
 		protected.GET("/users", controllers.CurrentUser)
 		protected.POST("/tasks", controllers.CreateTask)
+		protected.GET("/tasks", controllers.GetAllTask)
 
 	}
 

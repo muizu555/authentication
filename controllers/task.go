@@ -36,3 +36,26 @@ func CreateTask(c *gin.Context) {
 	})
 
 }
+
+func GetAllTask(c *gin.Context) {
+	userId := c.Query("user_id") // URLのクエリパラメータからuserIdを取得
+
+	if userId == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "userId is required"})
+		return
+	}
+
+	var tasks []models.Task
+
+	err := models.DB.Where("userId = ?", userId).Find(&tasks).Error
+	if err != nil {
+		log.Println("Error fetching tasks: ", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": tasks,
+	})
+
+}
