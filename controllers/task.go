@@ -47,7 +47,7 @@ func GetAllTask(c *gin.Context) {
 
 	var tasks []models.Task
 
-	err := models.DB.Where("userId = ?", userId).Find(&tasks).Error
+	err := models.DB.Where("user_id = ?", userId).Find(&tasks).Error
 	if err != nil {
 		log.Println("Error fetching tasks: ", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
