@@ -1,8 +1,6 @@
 package models
 
 import (
-	"fmt"
-
 	"github.com/jinzhu/gorm"
 )
 
@@ -17,7 +15,5 @@ func (u Task) Save() (Task, error) {
 	if err != nil {
 		return Task{}, err
 	}
-	fmt.Println("hoge", u.Desc)
-	fmt.Println("hoge2", u.UserId)
 	return u, nil
 }

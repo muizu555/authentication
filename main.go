@@ -18,6 +18,7 @@ func main() {
 	{
 		public.POST("/register", controllers.RegisterUser)
 		public.POST("/login", controllers.LoginUser)
+		public.GET("/users", controllers.GetAllUsers)
 	}
 
 	protected := router.Group("/api/admin")
@@ -26,7 +27,7 @@ func main() {
 	{
 		protected.GET("/users", controllers.CurrentUser)
 		protected.POST("/tasks", controllers.CreateTask)
-		protected.GET("/tasks", controllers.GetAllTask)
+		protected.GET("/tasks", controllers.GetAllTasks)
 
 	}
 

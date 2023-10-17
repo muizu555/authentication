@@ -37,7 +37,7 @@ func CreateTask(c *gin.Context) {
 
 }
 
-func GetAllTask(c *gin.Context) {
+func GetAllTasks(c *gin.Context) {
 	userId := c.Query("user_id") // URLのクエリパラメータからuserIdを取得
 
 	if userId == "" {
