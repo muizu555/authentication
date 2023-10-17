@@ -9,7 +9,7 @@ import (
 )
 
 func GetAllUsers(c *gin.Context) {
-	var allUsers []models.User //スライスを作る
+	var allUsers []models.User //スライスを作る  //ここでmodels.Taskとしたら、Tasksテーブルを参照することになる
 
 	err := models.DB.Find(&allUsers).Error
 
