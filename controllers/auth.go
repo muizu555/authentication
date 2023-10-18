@@ -33,7 +33,8 @@ func RegisterUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"data": newUser.PrepareOutput(),
+		"data":  newUser.PrepareOutput(),
+		"data2": user,
 	})
 }
 

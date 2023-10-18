@@ -18,12 +18,12 @@ type User struct {
 	Password string `gorm:"size:255;not null;" json:"password"`
 }
 
-func (u User) Save() (User, error) {
+func (u *User) Save() (User, error) {
 	err := DB.Create(&u).Error
 	if err != nil {
 		return User{}, err
 	}
-	return u, nil
+	return *u, nil
 }
 
 // 自動的に呼び出される
