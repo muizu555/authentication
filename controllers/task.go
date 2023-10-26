@@ -85,7 +85,7 @@ func DeleteTask(c *gin.Context) {
 
 	var task models.Task
 
-	err := models.DB.Where("id = ?", taskId).First(&task).Error
+	err := models.DB.Where("id = ?", taskId).Delete(&task).Error
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Failed to delete task"})
