@@ -28,6 +28,8 @@ func main() {
 		protected.GET("/users", controllers.CurrentUser)
 		protected.POST("/tasks", controllers.CreateTask)
 		protected.GET("/tasks", controllers.GetAllTasks)
+		protected.PUT("/tasks", controllers.UpdateTask)
+		protected.DELETE("/tasks", controllers.DeleteTask)
 
 	}
 

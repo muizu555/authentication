@@ -59,3 +59,39 @@ func GetAllTasks(c *gin.Context) {
 	})
 
 }
+
+type UpdateTaskInput struct {
+	Desc   string `json:"desc" binding:"required"`
+	UserId int    `json:"userId" binding:"required"`
+}
+
+func UpdateTask(c *gin.Context) {
+	var input UpdateTaskInput
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+}
+
+func DeleteTask(c *gin.Context) {
+	taskId := c.Query("task_id")
+
+	if taskId == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "taskId is required"})
+		return
+	}
+
+	var task models.Task
+
+	err := models.DB.Where("id = ?", taskId).First(&task).Error
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Failed to delete task"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Task deleted successfully"})
+
+}
