@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"auth-jwt/models"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -109,7 +110,11 @@ func DeleteTask(c *gin.Context) {
 
 	var task models.Task
 
-	err := models.DB.Where("id = ?,user_id = ?", taskId, input.UserId).Delete(&task).Error
+	fmt.Println(taskId)
+
+	err := models.DB.Where("id = ?", taskId).Delete(&task).Error
+
+	//err := models.DB.Where("id = ? AND user_id = ?", taskId, input.UserId).Delete(&task).Error
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Failed to delete task"})
