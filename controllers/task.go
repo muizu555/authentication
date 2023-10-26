@@ -75,6 +75,10 @@ func UpdateTask(c *gin.Context) {
 
 }
 
+type DeleteTaskInput struct {
+	UserId int `json:"userId" binding:"required"`
+}
+
 func DeleteTask(c *gin.Context) {
 	taskId := c.Query("task_id")
 
@@ -83,9 +87,29 @@ func DeleteTask(c *gin.Context) {
 		return
 	}
 
+	var input DeleteTaskInput
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// トークンからユーザーIDを取得
+	tokenUserId, tokenErr := models.ExtractTokenId(c)
+	if tokenErr != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token validation failed"})
+		return
+	}
+
+	// ユーザーIDが一致しない場合は認証エラーを返す
+	if input.UserId != int(tokenUserId) {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User ID in the request does not match the token"})
+		return
+	}
+
 	var task models.Task
 
-	err := models.DB.Where("id = ?", taskId).Delete(&task).Error
+	err := models.DB.Where("id = ?,user_id = ?", taskId, input.UserId).Delete(&task).Error
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Failed to delete task"})
